@@ -11,26 +11,6 @@
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
         }
-        .job-card {
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        .job-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        .status-queued {
-            background-color: #fef08a;
-        }
-        .status-running {
-            background-color: #93c5fd;
-        }
-        .status-completed {
-            background-color: #86efac;
-        }
-        .status-error {
-            background-color: #fca5a5;
-        }
         .pulse {
             animation: pulse 2s infinite;
         }
@@ -69,7 +49,6 @@
         <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <div class="px-4 py-6 sm:px-0">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <!-- Status Cards -->
                     <div class="bg-white overflow-hidden shadow rounded-lg">
                         <div class="px-4 py-5 sm:p-6">
                             <div class="flex items-center">
@@ -178,8 +157,8 @@
         </main>
     </div>
     <script>
-        // Backend API URL - replace with your actual backend endpoint
-        const API_URL = 'http://localhost:5000/api/jobs';
+        // API Base URL
+        const API_BASE_URL = "http://localhost:5000/api/jobs";
         
         // DOM Elements
         const refreshBtn = document.getElementById('refresh-btn');
@@ -262,53 +241,48 @@
             }
         );
         
-        // Format date
         function formatDate(dateString) {
             if (!dateString) return 'N/A';
             const date = new Date(dateString);
             return date.toLocaleString();
         }
         
-        // Format status badge (HTML string)
         function getStatusBadge(status) {
             const color = statusColors[status] || 'gray';
             return `<span class="px-2 py-1 text-xs font-semibold rounded-full bg-${color}-100 text-${color}-800">${status}</span>`;
         }
         
-        // Fetch jobs data from backend
         async function fetchJobs() {
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(API_BASE_URL);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const jobs = await response.json();
-                updateUI(jobs);
+                const data = await response.json();
+                if (data.success) {
+                    updateUI(data.jobs);
+                } else {
+                    alert("Error fetching jobs: " + (data.message || "Unknown error"));
+                }
             } catch (error) {
                 console.error('Error fetching jobs:', error);
                 alert('Error fetching jobs data. Check console for details.');
             }
         }
         
-        // Update UI with jobs data
         function updateUI(jobs) {
-            // Update status counts
             const counts = {
                 QUEUED: 0,
                 RUNNING: 0,
                 COMPLETED: 0,
                 ERROR: 0
             };
-            
             jobs.forEach(job => {
                 counts[job.status] = (counts[job.status] || 0) + 1;
             });
-            
             queuedCount.textContent = counts.QUEUED;
             runningCount.textContent = counts.RUNNING;
             completedCount.textContent = counts.COMPLETED;
-            
-            // Update status chart
             statusChart.data.datasets[0].data = [
                 counts.QUEUED,
                 counts.RUNNING,
@@ -316,8 +290,6 @@
                 counts.ERROR
             ];
             statusChart.update();
-            
-            // Update timeline chart with dummy data (replace with actual data or calculation)
             const totalSubmitted = counts.QUEUED + counts.RUNNING + counts.COMPLETED;
             timelineChart.data.datasets.data = [
                 Math.min(totalSubmitted, 5),
@@ -327,8 +299,6 @@
                 totalSubmitted
             ];
             timelineChart.update();
-            
-            // Update jobs table
             jobsTableBody.innerHTML = '';
             jobs.slice(0, 10).forEach(job => {
                 const row = document.createElement('tr');
@@ -343,7 +313,6 @@
                 `;
                 jobsTableBody.appendChild(row);
             });
-            // Attach event listeners to the view buttons
             document.querySelectorAll('.view-details-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const jobId = this.getAttribute('data-job-id');
@@ -352,20 +321,37 @@
             });
         }
         
-        // View job details
-        function viewJobDetails(jobId) {
-            alert(`Viewing details for job: ${jobId}`);
-            // In a real app, you would navigate to a details page or show a modal
+        async function viewJobDetails(jobId) {
+            try {
+                const res = await fetch(`${API_BASE_URL}/${jobId}`);
+                const data = await res.json();
+                if (!data.success) {
+                    alert('Job not found');
+                    return;
+                }
+                const job = data.job;
+                alert(
+                    `Job ID: ${job.id}\n` +
+                    `Status: ${job.status}\n` +
+                    `Backend: ${job.backend}\n` +
+                    `Submit Time: ${formatDate(job.submit_time)}\n` +
+                    `Completion Time: ${formatDate(job.completion_time)}\n` +
+                    `User: ${job.user || 'N/A'}\n` +
+                    (job.shots !== undefined ? `Shots: ${job.shots}\n` : '') +
+                    (job.parameters ? `QASM: ${job.parameters.slice(0, 200)}...\n` : '') +
+                    (job.results ? `Result: ${JSON.stringify(job.results).slice(0, 200)}\n` : '') +
+                    (job.queue_position !== undefined ? `Queue Position: ${job.queue_position}\n` : '') +
+                    (job.estimated_start_time ? `Estimated Start: ${formatDate(job.estimated_start_time)}\n` : '')
+                );
+            } catch (err) {
+                alert('Error fetching job details');
+            }
         }
         
-        // Event listeners
         refreshBtn.addEventListener('click', fetchJobs);
-        
-        // Initialize the dashboard
         document.addEventListener('DOMContentLoaded', () => {
             fetchJobs();
-            // Simulate real-time updates - in a real app, you'd use WebSockets
-            setInterval(fetchJobs, 60000); // Refresh every 60 seconds
+            setInterval(fetchJobs, 60000);
         });
     </script>
 </body>

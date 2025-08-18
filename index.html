@@ -1,358 +1,331 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBM Quantum Jobs Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IBM Quantum Jobs Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+    }
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+  </style>
 </head>
 <body class="bg-gray-50">
-    <div class="min-h-screen">
-        <nav class="bg-indigo-600 text-white shadow-lg">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <img src="https://placehold.co/40x40?text=Q" alt="Quantum computing logo" class="h-8 w-8 rounded">
-                        </div>
-                        <div class="hidden md:block">
-                            <div class="ml-10 flex items-baseline space-x-4">
-                                <a href="#" class="px-3 py-2 rounded-md text-sm font-medium bg-indigo-700">Dashboard</a>
-                                <a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-500">Jobs</a>
-                                <a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-500">Analytics</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <div class="min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <img src="https://placehold.co/40x40?text=Q" alt="Quantum logo" class="h-8 w-8 rounded">
             </div>
-        </nav>
-        <header class="bg-white shadow">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold text-gray-900">IBM Quantum Jobs Dashboard</h1>
+            <div class="hidden md:block">
+              <div class="ml-10 flex items-baseline space-x-4">
+                <a href="#" class="px-3 py-2 rounded-md text-sm font-medium bg-indigo-700">Dashboard</a>
+                <a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-500">Jobs</a>
+                <a href="#" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-500">Analytics</a>
+              </div>
             </div>
-        </header>
-        <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-            <div class="px-4 py-6 sm:px-0">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-4 py-5 sm:p-6">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 bg-yellow-100 rounded-md p-3">
-                                    <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </div>
-                                <div class="ml-5 w-0 flex-1">
-                                    <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Queued Jobs</dt>
-                                        <dd class="flex items-baseline">
-                                            <div class="text-2xl font-semibold text-gray-900" id="queued-count">0</div>
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-4 py-5 sm:p-6">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
-                                    <svg class="h-6 w-6 text-blue-600 pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                    </svg>
-                                </div>
-                                <div class="ml-5 w-0 flex-1">
-                                    <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Running Jobs</dt>
-                                        <dd class="flex items-baseline">
-                                            <div class="text-2xl font-semibold text-gray-900" id="running-count">0</div>
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-4 py-5 sm:p-6">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
-                                    <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                </div>
-                                <div class="ml-5 w-0 flex-1">
-                                    <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Completed Jobs</dt>
-                                        <dd class="flex items-baseline">
-                                            <div class="text-2xl font-semibold text-gray-900" id="completed-count">0</div>
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Charts -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-white p-4 shadow rounded-lg">
-                        <h2 class="text-lg font-medium text-gray-900 mb-4">Jobs by Status</h2>
-                        <canvas id="statusChart"></canvas>
-                    </div>
-                    <div class="bg-white p-4 shadow rounded-lg">
-                        <h2 class="text-lg font-medium text-gray-900 mb-4">Recent Job Activity</h2>
-                        <canvas id="timelineChart"></canvas>
-                    </div>
-                </div>
-                <!-- Jobs Table -->
-                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Quantum Computing Jobs</h3>
-                            <button id="refresh-btn" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Refresh Data
-                            </button>
-                        </div>
-                    </div>
-                    <div class="bg-white px-4 py-5 sm:p-6">
-                        <div class="flex flex-col">
-                            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                        <table class="min-w-full divide-y divide-gray-200">
-                                            <thead class="bg-gray-50">
-                                                <tr>
-                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job ID</th>
-                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Backend</th>
-                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submitted</th>
-                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="bg-white divide-y divide-gray-200" id="jobs-table-body">
-                                                <!-- Jobs will be inserted here -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white shadow">
+      <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900">IBM Quantum Jobs Dashboard</h1>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div class="px-4 py-6 sm:px-0">
+
+        <!-- Error Banner -->
+        <div id="error-banner" class="hidden mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          Error fetching jobs. Please try again later.
+        </div>
+
+        <!-- Job Counters -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div class="bg-white shadow rounded-lg p-4 flex items-center">
+            <div class="flex-shrink-0 bg-yellow-100 rounded-md p-3">
+              <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
             </div>
-        </main>
+            <div class="ml-5">
+              <p class="text-sm text-gray-500">Queued Jobs</p>
+              <p class="text-2xl font-semibold text-gray-900" id="queued-count">0</p>
+            </div>
+          </div>
+
+          <div class="bg-white shadow rounded-lg p-4 flex items-center">
+            <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+              <svg class="h-6 w-6 text-blue-600 pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 
+                      11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 
+                      2H15"/>
+              </svg>
+            </div>
+            <div class="ml-5">
+              <p class="text-sm text-gray-500">Running Jobs</p>
+              <p class="text-2xl font-semibold text-gray-900" id="running-count">0</p>
+            </div>
+          </div>
+
+          <div class="bg-white shadow rounded-lg p-4 flex items-center">
+            <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
+              <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div class="ml-5">
+              <p class="text-sm text-gray-500">Completed Jobs</p>
+              <p class="text-2xl font-semibold text-gray-900" id="completed-count">0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div class="bg-white p-4 shadow rounded-lg">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Jobs by Status</h2>
+            <canvas id="statusChart"></canvas>
+          </div>
+          <div class="bg-white p-4 shadow rounded-lg">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Recent Job Activity</h2>
+            <canvas id="timelineChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Jobs Table -->
+        <div class="bg-white shadow sm:rounded-lg">
+          <div class="px-4 py-5 sm:px-6 border-b border-gray-200 flex justify-between">
+            <h3 class="text-lg font-medium text-gray-900">Quantum Computing Jobs</h3>
+            <button id="refresh-btn"
+                    class="px-3 py-1 rounded-md text-white bg-indigo-600 hover:bg-indigo-700 text-sm">
+              Refresh Data
+            </button>
+          </div>
+          <div class="px-4 py-5">
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Job ID</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Backend</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Submitted</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="jobs-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Job Details Modal -->
+  <div id="job-modal"
+       class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">
+      <h3 class="text-xl font-bold mb-4">Job Details</h3>
+      <div id="job-modal-content" class="text-sm text-gray-700 space-y-2"></div>
+      <div class="mt-4 text-right">
+        <button id="close-modal"
+                class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+          Close
+        </button>
+      </div>
     </div>
-    <script>
-        // API Base URL
-        const API_BASE_URL = "http://localhost:5000/api/jobs";
-        
-        // DOM Elements
-        const refreshBtn = document.getElementById('refresh-btn');
-        const jobsTableBody = document.getElementById('jobs-table-body');
-        const queuedCount = document.getElementById('queued-count');
-        const runningCount = document.getElementById('running-count');
-        const completedCount = document.getElementById('completed-count');
-        
-        // Status colors mapping
-        const statusColors = {
-            'QUEUED': 'yellow',
-            'RUNNING': 'blue',
-            'COMPLETED': 'green',
-            'ERROR': 'red'
-        };
-        
-        // Initialize charts
-        const statusChart = new Chart(
-            document.getElementById('statusChart'),
-            {
-                type: 'doughnut',
-                data: {
-                    labels: ['Queued', 'Running', 'Completed', 'Error'],
-                    datasets: [{
-                        data: [0, 0, 0, 0],
-                        backgroundColor: [
-                            'rgba(253, 224, 71, 0.7)',
-                            'rgba(96, 165, 250, 0.7)',
-                            'rgba(74, 222, 128, 0.7)',
-                            'rgba(248, 113, 113, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(253, 224, 71, 1)',
-                            'rgba(96, 165, 250, 1)',
-                            'rgba(74, 222, 128, 1)',
-                            'rgba(248, 113, 113, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        }
-                    }
-                }
-            }
-        );
-        
-        const timelineChart = new Chart(
-            document.getElementById('timelineChart'),
-            {
-                type: 'line',
-                data: {
-                    labels: ['Last Hour', 'Last 3 Hours', 'Last 6 Hours', 'Last 12 Hours', 'Last 24 Hours'],
-                    datasets: [{
-                        label: 'Jobs Submitted',
-                        data: [0, 0, 0, 0, 0],
-                        fill: false,
-                        backgroundColor: 'rgba(79, 70, 229, 0.5)',
-                        borderColor: 'rgba(79, 70, 229, 1)',
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            }
-        );
-        
-        function formatDate(dateString) {
-            if (!dateString) return 'N/A';
-            const date = new Date(dateString);
-            return date.toLocaleString();
+  </div>
+
+  <script>
+    const API_BASE_URL = "http://localhost:5050/api/jobs";
+
+    // DOM Elements
+    const refreshBtn = document.getElementById('refresh-btn');
+    const jobsTableBody = document.getElementById('jobs-table-body');
+    const queuedCount = document.getElementById('queued-count');
+    const runningCount = document.getElementById('running-count');
+    const completedCount = document.getElementById('completed-count');
+    const errorBanner = document.getElementById('error-banner');
+
+    // Modal elements
+    const jobModal = document.getElementById("job-modal");
+    const jobModalContent = document.getElementById("job-modal-content");
+    const closeModalBtn = document.getElementById("close-modal");
+
+    // Status badge styles
+    const statusBadgeClasses = {
+      QUEUED: "bg-yellow-100 text-yellow-800",
+      RUNNING: "bg-blue-100 text-blue-800",
+      COMPLETED: "bg-green-100 text-green-800",
+      ERROR: "bg-red-100 text-red-800"
+    };
+
+    // Charts
+    const statusChart = new Chart(document.getElementById('statusChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Queued', 'Running', 'Completed', 'Error'],
+        datasets: [{
+          data: [0, 0, 0, 0],
+          backgroundColor: [
+            'rgba(253, 224, 71, 0.7)',
+            'rgba(96, 165, 250, 0.7)',
+            'rgba(74, 222, 128, 0.7)',
+            'rgba(248, 113, 113, 0.7)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    const timelineChart = new Chart(document.getElementById('timelineChart'), {
+      type: 'line',
+      data: {
+        labels: ['Last Hour', 'Last 3 Hours', 'Last 6 Hours', 'Last 12 Hours', 'Last 24 Hours'],
+        datasets: [{
+          label: 'Jobs Submitted',
+          data: [0, 0, 0, 0, 0],
+          fill: false,
+          borderColor: 'rgba(79, 70, 229, 1)',
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    function formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      return new Date(dateString).toLocaleString();
+    }
+
+    function getStatusBadge(status) {
+      return `<span class="px-2 py-1 text-xs font-semibold rounded-full ${statusBadgeClasses[status] || "bg-gray-100 text-gray-800"}">${status}</span>`;
+    }
+
+    async function fetchJobs() {
+      try {
+        errorBanner.classList.add("hidden");
+        const res = await fetch(API_BASE_URL);
+        if (!res.ok) throw new Error("API error");
+        const data = await res.json();
+        if (data.success) {
+          updateUI(data.jobs);
+        } else {
+          throw new Error(data.message || "Unknown error");
         }
-        
-        function getStatusBadge(status) {
-            const color = statusColors[status] || 'gray';
-            return `<span class="px-2 py-1 text-xs font-semibold rounded-full bg-${color}-100 text-${color}-800">${status}</span>`;
-        }
-        
-        async function fetchJobs() {
-            try {
-                const response = await fetch(API_BASE_URL);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                if (data.success) {
-                    updateUI(data.jobs);
-                } else {
-                    alert("Error fetching jobs: " + (data.message || "Unknown error"));
-                }
-            } catch (error) {
-                console.error('Error fetching jobs:', error);
-                alert('Error fetching jobs data. Check console for details.');
-            }
-        }
-        
-        function updateUI(jobs) {
-            const counts = {
-                QUEUED: 0,
-                RUNNING: 0,
-                COMPLETED: 0,
-                ERROR: 0
-            };
-            jobs.forEach(job => {
-                counts[job.status] = (counts[job.status] || 0) + 1;
-            });
-            queuedCount.textContent = counts.QUEUED;
-            runningCount.textContent = counts.RUNNING;
-            completedCount.textContent = counts.COMPLETED;
-            statusChart.data.datasets[0].data = [
-                counts.QUEUED,
-                counts.RUNNING,
-                counts.COMPLETED,
-                counts.ERROR
-            ];
-            statusChart.update();
-            const totalSubmitted = counts.QUEUED + counts.RUNNING + counts.COMPLETED;
-            timelineChart.data.datasets.data = [
-                Math.min(totalSubmitted, 5),
-                Math.min(totalSubmitted, 15),
-                Math.min(totalSubmitted, 30),
-                Math.min(totalSubmitted, 60),
-                totalSubmitted
-            ];
-            timelineChart.update();
-            jobsTableBody.innerHTML = '';
-            jobs.slice(0, 10).forEach(job => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${job.id || 'N/A'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${getStatusBadge(job.status)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${job.backend || 'N/A'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(job.submit_time)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <button class="text-indigo-600 hover:text-indigo-900 view-details-btn" data-job-id="${job.id || ''}">View</button>
-                    </td>
-                `;
-                jobsTableBody.appendChild(row);
-            });
-            document.querySelectorAll('.view-details-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const jobId = this.getAttribute('data-job-id');
-                    viewJobDetails(jobId);
-                });
-            });
-        }
-        
-        async function viewJobDetails(jobId) {
-            try {
-                const res = await fetch(`${API_BASE_URL}/${jobId}`);
-                const data = await res.json();
-                if (!data.success) {
-                    alert('Job not found');
-                    return;
-                }
-                const job = data.job;
-                alert(
-                    `Job ID: ${job.id}\n` +
-                    `Status: ${job.status}\n` +
-                    `Backend: ${job.backend}\n` +
-                    `Submit Time: ${formatDate(job.submit_time)}\n` +
-                    `Completion Time: ${formatDate(job.completion_time)}\n` +
-                    `User: ${job.user || 'N/A'}\n` +
-                    (job.shots !== undefined ? `Shots: ${job.shots}\n` : '') +
-                    (job.parameters ? `QASM: ${job.parameters.slice(0, 200)}...\n` : '') +
-                    (job.results ? `Result: ${JSON.stringify(job.results).slice(0, 200)}\n` : '') +
-                    (job.queue_position !== undefined ? `Queue Position: ${job.queue_position}\n` : '') +
-                    (job.estimated_start_time ? `Estimated Start: ${formatDate(job.estimated_start_time)}\n` : '')
-                );
-            } catch (err) {
-                alert('Error fetching job details');
-            }
-        }
-        
-        refreshBtn.addEventListener('click', fetchJobs);
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchJobs();
-            setInterval(fetchJobs, 60000);
-        });
-    </script>
+      } catch (err) {
+        console.error(err);
+        errorBanner.classList.remove("hidden");
+      }
+    }
+
+    function updateUI(jobs) {
+      const counts = { QUEUED: 0, RUNNING: 0, COMPLETED: 0, ERROR: 0 };
+      jobs.forEach(job => { counts[job.status] = (counts[job.status] || 0) + 1; });
+
+      queuedCount.textContent = counts.QUEUED;
+      runningCount.textContent = counts.RUNNING;
+      completedCount.textContent = counts.COMPLETED;
+
+      statusChart.data.datasets[0].data = [counts.QUEUED, counts.RUNNING, counts.COMPLETED, counts.ERROR];
+      statusChart.update();
+
+      const totalSubmitted = counts.QUEUED + counts.RUNNING + counts.COMPLETED;
+      timelineChart.data.datasets[0].data = [
+        Math.min(totalSubmitted, 5),
+        Math.min(totalSubmitted, 15),
+        Math.min(totalSubmitted, 30),
+        Math.min(totalSubmitted, 60),
+        totalSubmitted
+      ];
+      timelineChart.update();
+
+      jobsTableBody.innerHTML = '';
+      jobs.slice(0, 10).forEach(job => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="px-6 py-4 text-sm font-medium text-gray-900">${job.id || 'N/A'}</td>
+          <td class="px-6 py-4 text-sm">${getStatusBadge(job.status)}</td>
+          <td class="px-6 py-4 text-sm text-gray-500">${job.backend || 'N/A'}</td>
+          <td class="px-6 py-4 text-sm text-gray-500">${formatDate(job.submit_time)}</td>
+          <td class="px-6 py-4 text-sm">
+            <button class="text-indigo-600 hover:text-indigo-900 view-details-btn" data-job-id="${job.id}">View</button>
+          </td>
+        `;
+        jobsTableBody.appendChild(row);
+      });
+
+      document.querySelectorAll('.view-details-btn').forEach(btn => {
+        btn.addEventListener('click', () => viewJobDetails(btn.dataset.jobId));
+      });
+    }
+
+    async function viewJobDetails(jobId) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/${jobId}`);
+        const data = await res.json();
+        if (!data.success) return;
+        const job = data.job;
+
+        jobModalContent.innerHTML = `
+          <p><strong>Job ID:</strong> ${job.id}</p>
+          <p><strong>Status:</strong> ${job.status}</p>
+          <p><strong>Backend:</strong> ${job.backend || 'N/A'}</p>
+          <p><strong>Submitted:</strong> ${formatDate(job.submit_time)}</p>
+          <p><strong>Completed:</strong> ${formatDate(job.completion_time)}</p>
+          <p><strong>User:</strong> ${job.user || 'N/A'}</p>
+          ${job.shots !== undefined ? `<p><strong>Shots:</strong> ${job.shots}</p>` : ""}
+          ${job.parameters ? `<p><strong>QASM:</strong> ${job.parameters.slice(0,100)}...</p>` : ""}
+          ${job.results ? `<p><strong>Results:</strong> ${JSON.stringify(job.results).slice(0,100)}...</p>` : ""}
+          ${job.queue_position !== undefined ? `<p><strong>Queue Position:</strong> ${job.queue_position}</p>` : ""}
+        `;
+        jobModal.classList.remove("hidden");
+      } catch (err) {
+        console.error("Error fetching job details", err);
+      }
+    }
+
+    closeModalBtn.addEventListener("click", () => jobModal.classList.add("hidden"));
+    jobModal.addEventListener("click", (e) => {
+      if (e.target === jobModal) {
+        jobModal.classList.add("hidden");
+      }
+    });
+
+    refreshBtn.addEventListener("click", fetchJobs);
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchJobs();
+      setInterval(fetchJobs, 60000);
+    });
+  </script>
 </body>
 </html>
